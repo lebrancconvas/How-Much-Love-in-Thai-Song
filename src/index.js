@@ -36,11 +36,15 @@ const index = async() => {
 		const likeWord = wordlist.default[4];
 		const iWord = wordlist.default[5];
 		const youWord = wordlist.default[0];
+		const heartWord = wordlist.default[5];
+		const gfbfWord = wordlist.default[wordlist.default.length - 2];
 
 		let loveWordCount = 0;
 		let likeWordCount = 0;
 		let iWordCount = 0;
 		let youWordCount = 0;
+		let heartWordCount = 0;
+		let gfbfWordCount = 0;
 
 		while(value.includes(loveWord)) {
 			loveWordCount++;
@@ -61,6 +65,16 @@ const index = async() => {
 			youWordCount++;
 			value = value.replace(youWord, ''); 
 		}
+
+		while(value.includes(heartWord)) {
+			heartWordCount++;
+			value = value.replace(heartWord, ''); 
+		}
+
+		while(value.includes(gfbfWord)) {
+			gfbfWordCount++;
+			value = value.replace(gfbfWord, ''); 
+		}
 		
 		const lyricData = {
 			"track": track,
@@ -70,7 +84,9 @@ const index = async() => {
 				"รัก": loveWordCount,
 				"ชอบ": likeWordCount,
 				"ฉัน": iWordCount,
-				"คุณ": youWordCount  
+				"คุณ": youWordCount,
+				"ใจ": heartWordCount,
+				"แฟน": gfbfWordCount  
 			}
 		}
 
