@@ -35,27 +35,31 @@ const index = async() => {
 	return value;
 };
 
-// fs.writeFileSync(`./out/lyrics/${track}-${artist}.txt`, index());
-
 index()
 	.then(res => {
-		// console.log(res);
-		// fs.writeFileSync(`./out/lyrics/${track}-${artist}.txt`, res);  
 		const loveWord = wordlist.default[3];
+		const likeWord = wordlist.default[4];
 		let loveWordCount = 0;
+		let likeWordCount = 0;
 
 		while(res.includes(loveWord)) {
 			loveWordCount++;
 			res = res.replace(loveWord, ''); 
+		}
+
+		while(res.includes(likeWord)) {
+			likeWordCount++;
+			res = res.replace(likeWord, ''); 
 		}
 		
 		const lyricData = {
 			"track": config.track,
 			"artist": config.artist,
 			"URL": url,
-			"counts": [{
-				"รัก": loveWordCount
-			}],
+			"counts": {
+				"รัก": loveWordCount,
+				"ชอบ": likeWordCount  
+			}
 		}
 
 		data.push(lyricData);
