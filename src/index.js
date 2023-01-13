@@ -39,8 +39,13 @@ index()
 	.then(res => {
 		const loveWord = wordlist.default[3];
 		const likeWord = wordlist.default[4];
+		const iWord = wordlist.default[5];
+		const youWord = wordlist.default[0];
+
 		let loveWordCount = 0;
 		let likeWordCount = 0;
+		let iWordCount = 0;
+		let youWordCount = 0;
 
 		while(res.includes(loveWord)) {
 			loveWordCount++;
@@ -51,6 +56,16 @@ index()
 			likeWordCount++;
 			res = res.replace(likeWord, ''); 
 		}
+
+		while(res.includes(iWord)) {
+			iWordCount++;
+			res = res.replace(iWord, ''); 
+		}
+
+		while(res.includes(youWord)) {
+			youWordCount++;
+			res = res.replace(youWord, ''); 
+		}
 		
 		const lyricData = {
 			"track": config.track,
@@ -58,7 +73,9 @@ index()
 			"URL": url,
 			"counts": {
 				"รัก": loveWordCount,
-				"ชอบ": likeWordCount  
+				"ชอบ": likeWordCount,
+				"ฉัน": iWordCount,
+				"คุณ": youWordCount  
 			}
 		}
 
