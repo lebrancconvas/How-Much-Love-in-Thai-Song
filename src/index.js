@@ -2,41 +2,36 @@ import puppeteer from 'puppeteer';
 import { config } from './config/config.js'; 
 import fs from 'fs';
 import * as wordlist from './lib/wordlist.json' assert { type: "json" }; 
+import * as inputSet from './lib/input.json' assert { type: "json" }; 
 
-let track = config.track;
-let artist = config.artist; 
+let track;
+let artist;  
 
-let data = [];
-
-track = track.toLowerCase().split(" ").join("-");
-artist = artist.toLowerCase().split(" ").join("-");
-
-const parameter = track + "-" + artist;
-
-const url = config.baseURL + parameter; 
+let data = [];  
 
 const index = async() => {
 	const browser = await puppeteer.launch({ headless: config.isHeadless });
 	const page = await browser.newPage(); 
-	// const baseURL = "https://music.guchill.com/";
 
-	await page.goto(url); 
+	for(let i = 0; i < inputSet.default.length; i++) {
+		track = inputSet.default[i].track;
+		artist = inputSet.default[i].artist;   
 
-	const selector = "#main_content"; 
+		track = track.toLowerCase().split(" ").join("-");
+		artist = artist.toLowerCase().split(" ").join("-");
 
-	await page.waitForSelector(selector);
-	let element = await page.$(selector);
-	let value = await page.evaluate(el => el.textContent, element); 
+		const parameter = track + "-" + artist;
 
+		const url = config.baseURL + parameter;
+
+		await page.goto(url); 
+
+		const selector = "#main_content"; 
 	
-	await page.close();
-	await browser.close(); 
+		await page.waitForSelector(selector);
+		let element = await page.$(selector);
+		let value = await page.evaluate(el => el.textContent, element); 
 
-	return value;
-};
-
-index()
-	.then(res => {
 		const loveWord = wordlist.default[3];
 		const likeWord = wordlist.default[4];
 		const iWord = wordlist.default[5];
@@ -47,29 +42,29 @@ index()
 		let iWordCount = 0;
 		let youWordCount = 0;
 
-		while(res.includes(loveWord)) {
+		while(value.includes(loveWord)) {
 			loveWordCount++;
-			res = res.replace(loveWord, ''); 
+			value = value.replace(loveWord, ''); 
 		}
 
-		while(res.includes(likeWord)) {
+		while(value.includes(likeWord)) {
 			likeWordCount++;
-			res = res.replace(likeWord, ''); 
+			value = value.replace(likeWord, ''); 
 		}
 
-		while(res.includes(iWord)) {
+		while(value.includes(iWord)) {
 			iWordCount++;
-			res = res.replace(iWord, ''); 
+			value = value.replace(iWord, ''); 
 		}
 
-		while(res.includes(youWord)) {
+		while(value.includes(youWord)) {
 			youWordCount++;
-			res = res.replace(youWord, ''); 
+			value = value.replace(youWord, ''); 
 		}
 		
 		const lyricData = {
-			"track": config.track,
-			"artist": config.artist,
+			"track": track,
+			"artist": artist,
 			"URL": url,
 			"counts": {
 				"รัก": loveWordCount,
@@ -81,11 +76,13 @@ index()
 
 		data.push(lyricData);
 
-		fs.writeFileSync(`./out/data/lyrics.json`, JSON.stringify(data, null, 2));
-	})
-	.catch(err => {
-		console.error(err);
-		console.log(`[ERROR]: Scraping Error`); 
-	})
+	}
+	
+	await page.close();
+	await browser.close(); 
 
-// index();
+	fs.writeFileSync(`./out/data/lyrics.json`, JSON.stringify(data, null, 2)); 
+};
+
+
+index(); 
