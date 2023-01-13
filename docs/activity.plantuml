@@ -1,0 +1,13 @@
+@startuml LoveSong_Activity 
+start 
+
+' Flowchart
+:Search Lyric Website;
+:Scraping Lyric from those website;  
+:Assign the word set that we want to find in the lyric;
+:Find how many word on the word set that appear in the lyric; 
+:Count how many word;
+:Store the data in JSON File; 
+
+stop 
+@enduml 
